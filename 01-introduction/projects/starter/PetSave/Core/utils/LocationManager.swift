@@ -43,41 +43,43 @@ final class LocationManager: NSObject, ObservableObject {
     self.authorizationStatus = authorizationStatus
     self.cllLocationManager = CLLocationManager()
     super.init()
-    cllLocationManager.delegate = self
-    self.authorizationStatus = cllLocationManager.authorizationStatus
-    cllLocationManager.startUpdatingLocation()
+    self.cllLocationManager.delegate = self
+    self.authorizationStatus = self.cllLocationManager.authorizationStatus
+    self.cllLocationManager.startUpdatingLocation()
   }
 
   func updateAuthorizationStatus() {
-    authorizationStatus = cllLocationManager.authorizationStatus
+    self.authorizationStatus = self.cllLocationManager.authorizationStatus
   }
 }
 
 // MARK: - Location status
+
 extension LocationManager {
   var locationIsDisabled: Bool {
-    authorizationStatus == .denied ||
-      authorizationStatus == .notDetermined ||
-      authorizationStatus == .restricted
+    self.authorizationStatus == .denied ||
+      self.authorizationStatus == .notDetermined ||
+      self.authorizationStatus == .restricted
   }
 }
 
-// MARK: - CLLocationManagerDelegate
+// MARK: CLLocationManagerDelegate
+
 extension LocationManager: CLLocationManagerDelegate {
-  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    updateAuthorizationStatus()
+  func locationManagerDidChangeAuthorization(_: CLLocationManager) {
+    self.updateAuthorizationStatus()
   }
 
   func locationManager(
-    _ manager: CLLocationManager,
+    _: CLLocationManager,
     didUpdateLocations locations: [CLLocation]
   ) {
     guard let location = locations.first else { return }
-    lastSeenLocation = location
+    self.lastSeenLocation = location
   }
 
   func locationManager(
-    _ manager: CLLocationManager,
+    _: CLLocationManager,
     didFailWithError error: Error
   ) {
     print("Location retrieving failed due to: \(error.localizedDescription)")

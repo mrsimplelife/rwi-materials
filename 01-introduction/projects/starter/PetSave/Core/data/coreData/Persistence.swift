@@ -38,7 +38,7 @@ struct PersistenceController {
   static var preview: PersistenceController = {
     let result = PersistenceController(inMemory: true)
     let viewContext = result.container.viewContext
-    for i in 0..<10 {
+    for i in 0 ..< 10 {
       let newItem = Item(context: viewContext)
       newItem.timestamp = Date()
     }
@@ -54,16 +54,16 @@ struct PersistenceController {
   let container: NSPersistentContainer
 
   init(inMemory: Bool = false) {
-    container = NSPersistentContainer(name: "PetSave")
+    self.container = NSPersistentContainer(name: "PetSave")
     if inMemory {
-      container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+      self.container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
-    container.loadPersistentStores { _, error in
+    self.container.loadPersistentStores { _, error in
       if let error = error as NSError? {
         fatalError("Unresolved error \(error), \(error.userInfo)")
       }
     }
-    container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-    container.viewContext.automaticallyMergesChangesFromParent = true
+    self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+    self.container.viewContext.automaticallyMergesChangesFromParent = true
   }
 }
